@@ -4,6 +4,9 @@ Demo application for giving travel advice written in Python. Observability signa
 
 Uses OpenAI ChatGPT to generate advice for a given destination.
 
+> **Note**
+> This product is not officially supported by Dynatrace!
+
 ![title](screenshot.png)
 
 ## [>> Click here to start the hands on tutorial](https://dynatrace-perfclinics.github.io/obslab-llm-observability)
