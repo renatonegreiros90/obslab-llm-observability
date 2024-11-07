@@ -18,7 +18,7 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from traceloop.sdk import Traceloop
 from traceloop.sdk.decorators import workflow
 
@@ -69,18 +69,18 @@ logger = logging.getLogger(__name__)
 # # CONFIGURE OPENTELEMETRY
 
 resource = Resource.create(
-    {"service.name": "travel-advisor", "service.version": "0.2.0"}
+    {"service.name": "travel-advisor", "service.version": "0.2.1"}
 )
 
 TOKEN = read_token()
 headers = {"Authorization": f"Api-Token {TOKEN}"}
 
-provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(
-    OTLPSpanExporter(endpoint=f"{OTEL_ENDPOINT}/v1/traces", headers=headers)
-)
-provider.add_span_processor(processor)
-trace.set_tracer_provider(provider)
+# provider = TracerProvider(resource=resource)
+# processor = BatchSpanProcessor(
+#     OTLPSpanExporter(endpoint=f"{OTEL_ENDPOINT}/v1/traces", headers=headers)
+# )
+#provider.add_span_processor(processor)
+#trace.set_tracer_provider(provider)
 otel_tracer = trace.get_tracer("travel-advisor")
 
 Traceloop.init(
