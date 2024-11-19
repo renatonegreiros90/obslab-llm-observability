@@ -2,8 +2,8 @@ import ollama
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_community.document_loaders import BSHTMLLoader
 
-from langchain_community.chat_models import ChatOllama
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_ollama.chat_models import ChatOllama
+from langchain_ollama.embeddings import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
@@ -115,7 +115,7 @@ def prep_system():
     {context}
     </context>
 
-    Question: {input}
+    Question: Give travel advise in a paragraph of max 50 words about {input}
                                               
     """
     )
