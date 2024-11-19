@@ -1,3 +1,4 @@
+import ollama
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_community.document_loaders import BSHTMLLoader
 
@@ -15,12 +16,9 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from traceloop.sdk import Traceloop
-from traceloop.sdk.decorators import workflow
+from traceloop.sdk.decorators import workflow, task
 
 # disable traceloop telemetry
 os.environ["TRACELOOP_TELEMETRY"] = "false"
@@ -74,13 +72,6 @@ resource = Resource.create(
 
 TOKEN = read_token()
 headers = {"Authorization": f"Api-Token {TOKEN}"}
-
-# provider = TracerProvider(resource=resource)
-# processor = BatchSpanProcessor(
-#     OTLPSpanExporter(endpoint=f"{OTEL_ENDPOINT}/v1/traces", headers=headers)
-# )
-#provider.add_span_processor(processor)
-#trace.set_tracer_provider(provider)
 otel_tracer = trace.get_tracer("travel-advisor")
 
 Traceloop.init(
@@ -126,7 +117,7 @@ def prep_system():
 
     Question: {input}
                                               
-    If no context is available respond with 'Sorry, I have no data on {input}'."""
+    """
     )
 
     document_prompt = PromptTemplate(
@@ -151,9 +142,20 @@ app = FastAPI()
 
 ####################################
 @app.get("/api/v1/completion")
-def submit_completion(prompt: str):
+def submit_completion(framework: str, prompt: str):
     with otel_tracer.start_as_current_span(name="/api/v1/completion") as span:
-        return submit_completion(prompt, span)
+        if framework == "llm":
+            return llm_chat(prompt, span)
+        if framework == "rag":
+            return submit_completion(prompt, span)
+        return {"message": "invalid pipeline"}
+
+
+@task(name="ollama_chat")
+def llm_chat(prompt: str, span):
+    prompt = f"Give travel advise in a paragraph of max 50 words about {prompt}"
+    res = ollama.generate(model=AI_MODEL, prompt=prompt)
+    return {"message": res.get("response")}
 
 
 @workflow(name="travelgenerator")
