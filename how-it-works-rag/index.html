@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.30">
     
     
       
@@ -513,11 +513,14 @@
 
   <h1>3. How it works (RAG)</h1>
 
-<p>The "Retrieval-Augmented Generation" (RAG) version (available <a href="https://github.com/dynatrace-perfclinics/obslab-llm-observability/tree/ollama-pinecone" target="_blank">on the ollama-pinecone branch</a>) mimicks training an LLM on an internal knowledgebase. 
+<p>The "Retrieval-Augmented Generation" (RAG) version (available 
+<a href="https://github.com/dynatrace-perfclinics/obslab-llm-observability/tree/ollama-pinecone" target="_blank">on the ollama-pinecone branch</a>)
+mimicks training an LLM on an internal knowledgebase. 
 It will produce custom destination advice for places the system has explicitly been trained on (the files in the <a href="https://github.com/dynatrace-perfclinics/obslab-llm-observability/tree/ollama-pinecone/destinations" target="_blank">destinations folder</a>).
 Namely, <code>Bali</code> and <code>Sydney</code>. For other locations, the model will provide an answer based on its own knowledge.
 It is based on <a href="https://dt-url.net/l843uge">Ollama</a> and uses <a href="https://dt-url.net/0323urx">PineCone</a> as a Vector database. The RAG pipeline is built using <a href="https://dt-url.net/6d03u7j">LangChain</a>. </p>
-<p>The RAG version of the demo mimicks training an LLM on an internal knowledgebase.</p>
+<p>The dropdown allow to select two modes: <code>Direct LLM</code> and <code>RAG</code>.<br />
+Switching between the two, we can verify the answer provided without and with our own knowledge based, respectively.</p>
 <p><img alt="" src="https://dt-cdn.net/images/architecture-rag-1269-e11f226cf6.jpg" /></p>
 <p>When the application starts, files inside the <a href="https://github.com/dynatrace-perfclinics/obslab-llm-observability/tree/ollama-pinecone/destinations" target="_blank">destinations</a> folder are read, processed, and stored in PineCone for later lookup.
 Afterwards, each request goes through the LangChain RAG pipeline, which performs the following steps:</p>
@@ -525,7 +528,7 @@ Afterwards, each request goes through the LangChain RAG pipeline, which performs
 <li>It contacts Ollama to produce an embedding of the user input</li>
 <li>With the embedding, reach out to PineCone to find documents relevant to the user input</li>
 <li>Use the documents to perform prompt engineering and send it to Ollama to produce the travel recommendation </li>
-<li>Process the answer received </li>
+<li>Process the answer received</li>
 </ul>
 <div class="grid cards">
 <ul>
