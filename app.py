@@ -115,8 +115,7 @@ def prep_system():
     {context}
     </context>
 
-    Question: Give travel advise in a paragraph of max 50 words about {input}
-                                              
+    Question: Give travel advise in a paragraph of max 50 words about {input}                                           
     """
     )
 
@@ -148,7 +147,7 @@ def submit_completion(framework: str, prompt: str):
             return llm_chat(prompt, span)
         if framework == "rag":
             return submit_completion(prompt, span)
-        return {"message": "invalid pipeline"}
+        return {"message": "invalid Mode"}
 
 
 @task(name="ollama_chat")
